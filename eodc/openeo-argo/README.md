@@ -71,6 +71,12 @@ It is possible to configure the additional helm values for these charts.
 
 ## Dependencies
 
+**Important Note on Bitnami Charts Migration:**
+
+As of August 28th, 2025, Bitnami has transitioned to a new OCI-based registry format. The legacy HTTP-based chart repository (`https://charts.bitnami.com/bitnami`) is being deprecated. This chart has been updated to use the new Bitnami OCI registry (`oci://registry-1.docker.io/bitnamicharts`). 
+
+For more information, see the [Bitnami Secure Images announcement](https://github.com/bitnami/charts/tree/main).
+
 **Argo Worfklows**
 
 Argo Workflows is used for initializing the executor on the k8s cluster in order to consume the provided OpenEO process graph.
