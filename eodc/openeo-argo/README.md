@@ -13,6 +13,8 @@ Currently, persistent storage is handled via a persistent volume claim ( PVC ) w
 
 Installation with microk8s into the kubernetes cluster. If not using microk8s, just remove the microk8s command.
 
+**Note:** This chart uses Bitnami charts from the OCI registry (`oci://registry-1.docker.io/bitnamicharts`) instead of the legacy HTTP-based repository. Helm 3.8.0 or later is required for OCI support.
+
 ### Microk8s
 ```
 microk8s kubectl create ns test
@@ -80,14 +82,14 @@ Helm Chart: https://github.com/argoproj/argo-helm/tree/main/charts/argo-workflow
 
 PostgreSQL is used for keeping track of the OpenEO users that have accessed the backend, the user defined process graphs that they have created, and the jobs they have created and submitted to argo. The persistence for psql is handled independently from the persistent storage used for the physical OpenEO job results.
 
-Helm Chart: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
+Helm Chart: oci://registry-1.docker.io/bitnamicharts/postgresql (Bitnami OCI Registry)
 
 
 **Redis**
 
 Redis is used in ordered to queue and limit the number of jobs that are submitted to Argo Workflows at any given time. Additionally, tasks are added to the queue to poll Argo Workflows untill the workflow is finished.
 
-Helm Chart: https://github.com/bitnami/charts/tree/main/bitnami/redis
+Helm Chart: oci://registry-1.docker.io/bitnamicharts/redis (Bitnami OCI Registry)
 
 
 ## Outstanding work

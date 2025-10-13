@@ -25,11 +25,11 @@ appVersion: "1.16.0"
 dependencies:
   - name: redis
     version: 19.5.2
-    repository: "https://charts.bitnami.com/bitnami"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
   - name: postgresql
     condition: postgresql.enabled
     version: 15.5.1
-    repository: "https://charts.bitnami.com/bitnami"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
   - name: argo-workflows
     condition: argoworkflows.enabled
     version: 0.32.0
