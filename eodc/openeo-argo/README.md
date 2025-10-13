@@ -15,6 +15,8 @@ Installation with microk8s into the kubernetes cluster. If not using microk8s, j
 
 **Note:** This chart uses Bitnami charts from the OCI registry (`oci://registry-1.docker.io/bitnamicharts`) instead of the legacy HTTP-based repository. Helm 3.8.0 or later is required for OCI support.
 
+📖 For detailed migration information, see [MIGRATION.md](MIGRATION.md)
+
 ### Microk8s
 ```
 microk8s kubectl create ns test
