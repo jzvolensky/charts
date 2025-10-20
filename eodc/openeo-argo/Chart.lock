@@ -1,0 +1,9 @@
+dependencies:
+- name: argo-workflows
+  repository: https://argoproj.github.io/argo-helm
+  version: 0.32.0
+- name: dask-gateway
+  repository: https://helm.dask.org
+  version: 2024.1.0
+digest: sha256:f0914029b3aa456c3c6e155913cf22d26d92adc106161360a517d376b355da50
+generated: "2025-10-16T11:40:11.076210686+02:00"

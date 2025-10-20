@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "openeo-argo.fullname" . }}-redis-master
+  labels:
+    {{- include "openeo-argo.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis-master
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6379
+    targetPort: redis
+    protocol: TCP
+    name: redis
+  selector:
+    {{- include "openeo-argo.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: redis-master
+{{- if .Values.redis.replicas.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "openeo-argo.fullname" . }}-redis-replicas
+  labels:
+    {{- include "openeo-argo.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis-replica
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6379
+    targetPort: redis
+    protocol: TCP
+    name: redis
+  selector:
+    {{- include "openeo-argo.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: redis-replica
+{{- end }}

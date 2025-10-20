@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "openeo-argo.fullname" . }}-redis-master
+  labels:
+    {{- include "openeo-argo.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis-master
+spec:
+  serviceName: {{ include "openeo-argo.fullname" . }}-redis-master
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "openeo-argo.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: redis-master
+  template:
+    metadata:
+      labels:
+        {{- include "openeo-argo.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: redis-master
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        imagePullPolicy: {{ .Values.redis.image.pullPolicy | default "IfNotPresent" }}
+        ports:
+        - containerPort: 6379
+          name: redis
+        command:
+        - redis-server
+        - --appendonly
+        - "yes"
+        - --save
+        - "900 1"
+        - --save
+        - "300 10"
+        - --save
+        - "60 10000"
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        resources:
+          {{- toYaml .Values.redis.resources | nindent 10 }}
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.redis.persistence.size | default "8Gi" }}
+{{- if .Values.redis.replicas.enabled }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "openeo-argo.fullname" . }}-redis-replicas
+  labels:
+    {{- include "openeo-argo.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis-replica
+spec:
+  serviceName: {{ include "openeo-argo.fullname" . }}-redis-replicas
+  replicas: {{ .Values.redis.replicas.count | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "openeo-argo.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: redis-replica
+  template:
+    metadata:
+      labels:
+        {{- include "openeo-argo.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: redis-replica
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        imagePullPolicy: {{ .Values.redis.image.pullPolicy | default "IfNotPresent" }}
+        ports:
+        - containerPort: 6379
+          name: redis
+        command:
+        - redis-server
+        - --slaveof
+        - {{ include "openeo-argo.fullname" . }}-redis-master
+        - "6379"
+        - --appendonly
+        - "yes"
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        resources:
+          {{- toYaml .Values.redis.resources | nindent 10 }}
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.redis.persistence.size | default "8Gi" }}
+{{- end }}

@@ -133,14 +133,27 @@ affinity: {}
 
 
 postgresql:
-
   enabled: true
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
   
-  service:
-    ports:
-      postgresql: "5432"
-
-  clusterDomain: "cluster.local"
+  auth:
+    username: "postgres"
+    password: "openeo123"
+    database: "postgres"
+  
+  persistence:
+    size: "8Gi"
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
 
 
 argoworkflows:
@@ -151,13 +164,25 @@ argoworkflows:
 
 
 redis:
-
-  auth:
-    enabled: false
-
-  replica:
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
   
-    replicaCount: 1
+  persistence:
+    size: "8Gi"
+  
+  replicas:
+    enabled: true
+    count: 1
+  
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
 
 dask-gateway:
 
