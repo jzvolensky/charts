@@ -71,13 +71,21 @@ subjects:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: openeo-argo-access-init
+  name: openeo-argo-access-init-{{ .Release.Revision }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+  labels:
+    {{- include "openeo-argo.labels" . | nindent 4 }}
+    app.kubernetes.io/component: argo-access-init
 spec:
-  selector:
-    matchLabels:
-      {{- include "openeo-argo.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: argo-access-init
   template:
+    metadata:
+      labels:
+        {{- include "openeo-argo.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: argo-access-init
     spec:
       restartPolicy: Never
       serviceAccountName: openeo-secret-access-sa
