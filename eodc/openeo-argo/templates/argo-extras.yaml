@@ -73,6 +73,10 @@ kind: Job
 metadata:
   name: openeo-argo-access-init
 spec:
+  selector:
+    matchLabels:
+      {{- include "openeo-argo.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: argo-access-init
   template:
     spec:
       restartPolicy: Never
