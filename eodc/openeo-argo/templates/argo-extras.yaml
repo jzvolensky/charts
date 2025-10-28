@@ -96,6 +96,9 @@ spec:
         command: ["sh", "-xc"]
         args:
           - |
+            # Delete the secret if it exists (to handle immutability)
+            kubectl delete secret openeo-argo-access-sa.service-account-token --ignore-not-found=true
+            
             kubectl apply -f - <<EOF
             apiVersion: v1
             kind: Secret
