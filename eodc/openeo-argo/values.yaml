@@ -8,8 +8,8 @@ global:
     apiTLS: false
     apiTitle: "OpenEO ArgoWorkflows"
     apiDescription: "A K8S deployment of the openeo api for argoworkflows."
-    oidcUrl: "https://aai.egi.eu/auth/realms/egi"
-    odicOrganisation: "egi"
+    oidcUrl: "https://edp-portal.eurac.edu/auth/realms/edp"
+    odicOrganisation: "eurac"
     oidcPolicies: ""
     stacCatalogueUrl: "https://stac.eodc.eu/api/v1"
     workspaceRoot: "/user_workspaces"
