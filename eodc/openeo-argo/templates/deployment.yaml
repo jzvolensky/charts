@@ -118,6 +118,10 @@ spec:
               value: "{{ .Values.global.env.oidcPolicies }}"
             - name: STAC_API_URL
               value: "{{ .Values.global.env.stacCatalogueUrl }}"
+            - name: OIDC_CLIENT_SECRET
+              values: "{{ .Values.global.env.oidcClientSecret }}"
+            - name: OIDC_CLIENT_ID
+              values: "{{ .Values.global.env.oidcClientSecret }}"
             - name: ARGO_WORKFLOWS_SERVER
               value: "http://openeo-argo-workflows-server.{{ .Release.Namespace }}.svc.cluster.local:2746"
             - name: ARGO_WORKFLOWS_NAMESPACE
